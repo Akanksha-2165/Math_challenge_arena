@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'challenge_screen.dart';
 import 'leaderboard_screen.dart';
 import 'profile_screen.dart';
+import '../services/auth_service.dart';
+import '../login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,11 +14,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int latestScore = 0;
+  final AuthService authService = AuthService();
 
   // 🎨 COLORS
   final Color primary = const Color(0xFF1494BC);
   final Color accent = const Color(0xFFFF4B15);
   final Color bg = Colors.black;
+
 
   void navigate(Widget screen) {
     Navigator.push(
@@ -24,6 +28,17 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(builder: (context) => screen),
     );
   }
+
+  void logout() async {
+  await authService.logout();
+
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const LoginScreen(),
+    ),
+  );
+}
 
   Widget buildButton(String text, IconData icon, VoidCallback onPressed) {
     return Container(
@@ -244,6 +259,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icons.person,
                 () => navigate(const ProfileScreen()),
               ),
+
+              buildButton(
+                "Logout",
+                Icons.logout,
+                logout,
+          ),
 
               const Spacer(),
 
